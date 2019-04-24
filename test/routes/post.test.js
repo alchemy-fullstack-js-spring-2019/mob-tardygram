@@ -43,4 +43,27 @@ describe('post routes', () => {
   
       });
   });
+
+  it('GET all posts', () => {
+    return request(app)
+      .post('/api/v1/auth/signup')
+      .send({ username: 'billy', password: 'billyJowell' })
+      .then(res => {
+        return request(app)
+          .post('/api/v1/posts')
+          .send({
+            user: res.body.user._id,
+            photoUrl: 'http://url.com',
+            caption: 'my cool pic',
+            tags: ['tag']
+          })
+          .then(() => {
+            return request(app)
+              .get('/api/v1/posts');
+          })
+          .then(res => {
+            expect(res.body).toHaveLength(1);
+          });
+      });
+  });
 });
