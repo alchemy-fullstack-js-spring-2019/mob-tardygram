@@ -1,6 +1,5 @@
 require('dotenv').config();
 const { tokenize, untokenize } = require('../../lib/utils/token');
-const jwt = require('jsonwebtoken');
 
 describe('JWT TOKEN', () => {
   

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('../../lib/models/User');
-// grab tokenize & untokenize
+const { tokenize, untokenize } = require('../../lib/utils/token');
 const connect = require('../../lib/utils/connect');
 
 describe('USER TESTS', () => {
@@ -11,6 +11,10 @@ describe('USER TESTS', () => {
   beforeEach(() => {
     return mongoose.connection.dropDatabase();
   });
+  afterAll(() => {
+    return mongoose.connection.close();
+  });
+  
   it('create user model', () => {
     const user = new User({
       username: 'username',
@@ -40,17 +44,41 @@ describe('USER TESTS', () => {
     expect(user._tempPassword).toEqual('abc123');
   });
 
-  it.only('compares a password and a hashedPassword', () => {
+  it('compares a password and a hashedPassword', () => {
     return User.create({
       username: 'cheeky',
       password: 'abc123'
     })
       .then(user => {
-        console.log(user);
         return user.compare('abc123');
       })
       .then(result => {
         expect(result).toBeTruthy();
+      });
+  });
+  it('compares a password and a hashedPassword', () => {
+    return User.create({
+      username: 'cheeky',
+      password: 'abc555'
+    })
+      .then(user => {
+        return user.compare('abc123');
+      })
+      .then(result => {
+        expect(result).toBeFalsy();
+      });
+  });
+  it('creates an auth token', () => {
+    return User.create({
+      username: 'dude',
+      password:'bro' })
+      .then(user => {
+        const token = user.authToken();
+        const payload = untokenize(token);
+        expect(payload).toEqual({
+          _id: user._id.toString(),
+          username: 'dude'
+        });
       });
   });
 });
