@@ -28,14 +28,14 @@ describe('auth routes', () => {
 
   it('can sign in a user', () => {
     return User.create({
-      username: 'Jeff',
+      username: 'Jeff2',
       password: 'secret'
     })
       .then(() => {
         return request(app)
           .post('/api/v1/auth/signin')
           .send({
-            username: 'Jeff',
+            username: 'Jeff2',
             password: 'secret'
           });
       })
@@ -43,7 +43,7 @@ describe('auth routes', () => {
         expect(res.body).toEqual({
           user: {
             _id: expect.any(String),
-            username: 'Jeff'
+            username: 'Jeff2'
           },
           token: expect.any(String)
         });
