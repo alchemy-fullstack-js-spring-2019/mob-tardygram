@@ -1,6 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('../../lib/models/User');
+const { untokenize } = require('../../lib/utils/token');
 
 describe('User model', () => {
   beforeAll(() => {
@@ -68,6 +69,23 @@ describe('User model', () => {
       })
       .then(result => {
         expect(result).toBeFalsy();
+      });
+  });
+
+  it('can create an auth token', () => {
+    return User.create({
+      username: 'Cool Thing',
+      password: 'password',
+      profilePhotoUrl: 'string.jpg'
+    })
+      .then(user => {
+        const token = user.authToken();
+        const payload = untokenize(token);
+        expect(payload).toEqual({
+          username: 'Cool Thing',
+          profilePhotoUrl: 'string.jpg',
+          _id: expect.any(String)
+        });
       });
   });
 });
