@@ -22,4 +22,14 @@ describe('Post model', () => {
         });
       });
   });
+
+  it('has a required user field', () => {
+    const post = new Post({
+      photoUrl: 'image.jpg',
+      caption: 'So much yes',
+      tags: ['Squuuaad goalz', 'yesss']
+    });
+    const errors = post.validateSync().errors;
+    expect(errors.user.message).toEqual('Path `user` is required.');
+  });
 });
