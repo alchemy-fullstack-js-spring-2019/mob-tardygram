@@ -90,4 +90,24 @@ describe('auth routes', () => {
         expect(res.body.error).toEqual('Invalid authentication');
       });
   });
+  it('verify user', () => {
+    return User.create({
+      username: 'Flavender',
+      password: 'letmein',
+      profilePhotoUrl: 'https://picture.com/profile.jpg'
+    })
+      .then(user => {
+        const token = user.authToken();
+        return request(app)
+          .get('/api/v1/auth/verify')
+          .set('authorization', `Bearer ${token}`);
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          username: 'Flavender',
+          profilePhotoUrl: 'https://picture.com/profile.jpg'
+        });
+      });
+  });
 });
