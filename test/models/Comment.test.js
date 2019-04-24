@@ -15,4 +15,13 @@ describe('comment model', () => {
       _id: expect.any(mongoose.Types.ObjectId)
     });
   });
+  it('has required user, post, and comment', () => {
+    const comment = new Comment({});
+
+    const errors = comment.validateSync().errors;
+
+    expect(errors.commentBy.message).toEqual('Path `commentBy` is required.');
+    expect(errors.post.message).toEqual('Path `post` is required.');
+    expect(errors.comment.message).toEqual('Path `comment` is required.');
+  });
 });
