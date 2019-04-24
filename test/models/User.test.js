@@ -1,3 +1,4 @@
+require('../connect-db');
 const mongoose = require('mongoose');
 const User = require('../../lib/models/User');
 
@@ -21,4 +22,31 @@ describe('User model tests', () => {
     const errors = user.validateSync().errors;
     expect(errors.username.message).toBe('Path `username` is required.');
   });
+  it('stores a temp password', () => {
+    const user = new User({
+      username: 'test person',
+      password: 'test123'
+    });
+    expect(user.toJSON()).toEqual({
+      username: 'test person',
+      _id: expect.any(mongoose.Types.ObjectId),
+      profilePhotoUrl: expect.any(String)
+    });
+    expect(user._tempPassword).toEqual('test123');
+  });
+  it('creates hash with new user', async() => {
+    const user = await User.create({
+      username: 'test person',
+      password: 'test123'
+    });
+    console.log(typeof user._id, typeof user.passwordHash, typeof user.profilePhotoUrl);
+    expect(user).toEqual({
+      username: 'test person',
+      _id: expect.any(mongoose.Types.ObjectId),
+      profilePhotoUrl: expect.any(String),
+      passwordHash: expect.any(String),
+      __v: 0
+    });
+  });
 });
+
