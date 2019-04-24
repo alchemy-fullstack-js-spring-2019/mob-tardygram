@@ -19,3 +19,9 @@ PLAN
   User model
   User Auth
   User Routes
+
+Done
+  - user model
+  - hash utils
+  - token utils
+  
