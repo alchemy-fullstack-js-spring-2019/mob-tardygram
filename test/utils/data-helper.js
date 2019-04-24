@@ -7,7 +7,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  mongoose.connection.dropDatabase();
+  return mongoose.connection.dropDatabase();
 });
 
 afterAll(() => {
