@@ -31,12 +31,13 @@ beforeEach(() => {
         .send({
           username: user.username,
           password: 'password'
-        })
+        });
     })
     .then(res => {
       token = res.body.token;
-    })
-})
+    });
+});
+
 afterAll(() => {
   return mongoose.connection.close();
 });
