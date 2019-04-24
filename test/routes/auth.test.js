@@ -35,4 +35,28 @@ describe('auth routes', () => {
         });
       });
   });
+
+  it('test sign in user', () => {
+    return User.create({
+      username: 'MagicFrank',
+      password: 'unhackable'
+    })
+      .then(() => {
+        return request(app)
+          .post('/api/v1/auth/signin')
+          .send({
+            username: 'MagicFrank',
+            password: 'unhackable'
+          });
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          user: {
+            _id: expect.any(String),
+            username: 'MagicFrank'
+          },
+          token: expect.any(String)
+        });
+      });
+  });
 });
