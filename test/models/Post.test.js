@@ -34,5 +34,16 @@ describe('Post model', () => {
       _id: expect.any(mongoose.Types.ObjectId)
     });
   });
+
+  it('has a required user and photo URL fields', () => {
+    const post = new Post({
+      caption: 'hi there',
+      tags: ['hi', 'fun']
+    });
+    
+    const errors = post.validateSync().errors;
+    expect(errors.user.message).toEqual('Path `user` is required.');
+    expect(errors.photoUrl.message).toEqual('Path `photoUrl` is required.');
+  });
 });
 
