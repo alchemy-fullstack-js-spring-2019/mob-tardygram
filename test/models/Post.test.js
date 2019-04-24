@@ -46,4 +46,3 @@ describe('Post model', () => {
     expect(errors.photoUrl.message).toEqual('Path `photoUrl` is required.');
   });
 });
-
