@@ -1,6 +1,6 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
 const request = require('supertest');
+const mongoose = require('mongoose');
 const connect = require('../../lib/utils/connect');
 const app = require('../../lib/app');
 const User = require('../../lib/models/User');
@@ -9,7 +9,7 @@ describe('auth routes', () => {
   beforeAll(() => {
     return connect();
   });
-
+  
   beforeEach(() => {
     return mongoose.connection.dropDatabase();
   });
