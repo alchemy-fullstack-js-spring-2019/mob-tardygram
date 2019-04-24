@@ -19,7 +19,7 @@ describe('auth routes', () => {
     return mongoose.connection.close();
   });
 
-  it('creates a new user', () => {
+  it('signup a new user', () => {
     return request(app)
       .post('/instantgram/auth/signup')
       .send({ username: 'DMV', password: 'dmv' })
@@ -51,4 +51,23 @@ describe('auth routes', () => {
           });
       });
   });
+
+  it('verifies a user', () => {
+    return request(app)
+      .post('/instantgram/auth/signup')
+      .send({ username: 'DMV', password: 'dmv' })
+      .then(user => {
+        return request(app)
+          .get('/instantgram/auth/verify')
+          .set('Authorization', `Bearer ${user.body.token}`)
+          .then(result => {
+            expect(result.body).toEqual({
+              _id: expect.any(String),
+              username: 'DMV',
+            });
+          });
+      });
+  });
+
+
 });
