@@ -4,15 +4,17 @@ const request = require('supertest');
 const app = require('../../lib/app');
 
 describe('posts routes', () => {
-  it('test that a user can post', async() => {
-    const res = await request(app)
+  let res;
+  let userPost;
+  beforeEach(async() => {
+    res = await request(app)
       .post('/api/v1/auth/signup')
       .send({
         username: 'intro_mode',
         password: 'youllneverguess'
       });
 
-    const userPost = await request(app)
+    userPost = await request(app)
       .post('/api/v1/posts')
       .set('Authorization', res.body.token)
       .send({
@@ -21,6 +23,10 @@ describe('posts routes', () => {
         caption: 'cutecaptionhere',
         hashtags: ['omg', 'wow']
       });
+  });
+  
+
+  it('test that a user can post', async() => {
     expect(userPost.body).toEqual({
       user: res.body.user._id,
       photoUrl: 'cutephotohere',
@@ -30,5 +36,11 @@ describe('posts routes', () => {
       _id: expect.any(String)
 
     });
+  });
+  it('gets a list of all posts', async() => {
+    const posts = await request(app)
+      .get('/api/v1/posts');
+
+    expect(posts.body).toHaveLength(1);
   });
 });
