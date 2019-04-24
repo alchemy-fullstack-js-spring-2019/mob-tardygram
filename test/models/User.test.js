@@ -80,11 +80,24 @@ describe('User model', () => {
   });
 
   it('has authToken method', () => {
-    const user = new User({ username: 'anna', password: '1234pw' });
-    const returnedToken = user.authToken();
-    const untokenized = untokenize(returnedToken);
+    User.create({ username: 'anna', password: '1234pw' })
+      .then(user => {
+        const returnedToken = user.authToken();
+        const untokenized = untokenize(returnedToken);
+        expect(untokenized).toEqual({ username: 'anna', _id: user._id.toString() });
+      });
+  });
 
-    expect(untokenized).toEqual({ username: 'anna', _id: user._id.toString() });
+  it('finds a user by token', () => {
+    User.create({
+      username: 'bonnie'
+    })
+      .then(user => user.authToken())
+      .then(token => User.findByToken(token))
+      .then(foundUser => expect(foundUser).toEqual({
+        username: 'bonnie',
+        _id: expect.any(mongoose.Types.ObjectId)
+      }));
   });
 
 
