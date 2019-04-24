@@ -26,4 +26,12 @@ describe('post routes', () => {
         });
       });
   });
+
+  it('can get a list of posts', () => {
+    return request(app)
+      .get('/api/v1/posts')
+      .then(res => {
+        expect(res.body).toHaveLength(20);
+      });
+  });
 });
