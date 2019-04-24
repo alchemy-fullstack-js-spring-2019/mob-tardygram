@@ -60,4 +60,23 @@ describe('auth routes', () => {
         });
       });
   });
+
+  it('errors signin on a bad password', () => {
+    return User.create({
+      username: 'Flavender',
+      password: 'letmein',
+      profilePhotoUrl: 'https://picture.com/profile.jpg'
+    })
+      .then(() => {
+        return request(app)
+          .post('/api/v1/auth/signin')
+          .send({
+            username: 'Flavender',
+            password: 'dontletmein'
+          });
+      })
+      .then(res => {
+        expect(res.body.error).toEqual('Invalid authentication');
+      });
+  });
 });
