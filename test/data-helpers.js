@@ -4,6 +4,8 @@ const seedData = require('./seed-data');
 const User = require('../lib/models/User');
 const Post = require('../lib/models/Post');
 const connect = require('../lib/utils/connect');
+const request = require('supertest');
+const app = require('../lib/app');
 
 beforeAll(() => {
   return connect();
@@ -17,6 +19,24 @@ beforeEach(() => {
   return seedData();
 });
 
+let token = null;
+beforeEach(() => {
+  return User.create({
+    username: 'Test Person',
+    password: 'password'
+  })
+    .then(user => {
+      return request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          username: user.username,
+          password: 'password'
+        })
+    })
+    .then(res => {
+      token = res.body.token;
+    })
+})
 afterAll(() => {
   return mongoose.connection.close();
 });
@@ -29,5 +49,6 @@ const createGetters = Model => ({
 
 module.exports = {
   ...createGetters(User),
-  ...createGetters(Post)
+  ...createGetters(Post),
+  getToken: () => token
 };
