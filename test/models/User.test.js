@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('../../lib/models/User');
-const { untokenize } = require('../../lib/utils/token');
+const { untokenize, tokenize } = require('../../lib/utils/token');
 
 describe('User model', () => {
   beforeAll(() => {
@@ -85,6 +85,27 @@ describe('User model', () => {
           username: 'Cool Thing',
           profilePhotoUrl: 'string.jpg',
           _id: expect.any(String)
+        });
+      });
+  });
+
+  it('finds a token', () => {
+    return User.create({
+      username: 'Cool Thing',
+      password: 'password',
+      profilePhotoUrl: 'string.jpg'
+    })
+      .then(payload => {
+        return tokenize(payload);
+      })
+      .then(token => {
+        return User.findByToken(token);
+      })
+      .then(foundUser => {
+        expect(foundUser).toEqual({
+          username: 'Cool Thing',
+          _id: expect.any(String),
+          profilePhotoUrl: 'string.jpg'
         });
       });
   });
