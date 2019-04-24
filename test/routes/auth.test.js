@@ -4,6 +4,7 @@ const app = require('../../lib/app');
 const User = require('../../lib/models/User');
 require('../data-helpers');
 
+
 describe('auth routes', () => {
   it('signs up a new user', () => {
     return request(app)
