@@ -20,4 +20,16 @@ describe('hashing functions', () => {
         expect(compareResult).toBeTruthy();
       });
   });
+
+  it('can compare bad passwords', () => {
+    const password = 'password1234';
+
+    return hash(password)
+      .then(hashedPassword => {
+        return compare('password', hashedPassword);
+      })
+      .then(compareResult => {
+        expect(compareResult).toBeFalsy();
+      });
+  });
 });
