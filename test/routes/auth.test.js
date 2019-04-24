@@ -37,4 +37,31 @@ describe('auth routes', () => {
         });
       });
   });
+
+  it('can sign in a user', () => {
+    return User.create({
+      username: 'funky',
+      password: 'password',
+      profilePhotoUrl: 'string.jpg'
+    })
+      .then(() => {
+        return request(app)
+          .post('/api/v1/auth/signin')
+          .send({
+            username: 'funky',
+            password: 'password',
+            profilePhotoUrl: 'string.jpg'
+          });
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          user: {
+            username: 'funky',
+            profilePhotoUrl: 'string.jpg',
+            _id: expect.any(String)
+          },
+          token: expect.any(String)
+        });
+      });
+  });
 });
