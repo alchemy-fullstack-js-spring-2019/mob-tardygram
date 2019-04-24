@@ -21,6 +21,15 @@ describe('User model', () => {
     const user = new User({});
     const errors = user.validateSync().errors;
     expect(errors.username.message).toEqual('Path `username` is required.');
-  })
+  });
+
+  it('has a password', () => {
+    const user = new User({
+      username: 'bonnie',
+      password: 'bananas'
+    });
+
+    expect(user._tempPassword).toEqual('bananas');
+  });
 
 });
