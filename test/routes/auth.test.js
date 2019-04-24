@@ -43,7 +43,7 @@ describe('auth routes', () => {
     })
       .then(() => {
         return request(app)
-          .post('/api/v1/signin')
+          .post('/api/v1/auth/signin')
           .send({
             username: 'Flavender',
             password: 'letmein'
