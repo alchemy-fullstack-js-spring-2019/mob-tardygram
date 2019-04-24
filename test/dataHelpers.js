@@ -22,7 +22,7 @@ afterAll(() => {
   return mongoose.connection.close();
 });
 
-const prepare = model => JSON.parse(JSON.stringify(model));
+const prepare = model => model;
 const createGetters = Model => ({
   [`get${Model.modelName}`]: query => Model.findOne(query).then(prepare),
   [`get${Model.modelName}s`]: query => Model.find(query).then(models => models.map(prepare))
