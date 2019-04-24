@@ -12,9 +12,9 @@ Users can post new posts and leave comments. They have:
 * A String `passwordHash`
 * A String `profilePhotoUrl`
 
-### Post
+### Thread
 
-Posts are photos with some text caption. They should have:
+threads are photos with some text caption. They should have:
 
 * A reference to user `user`
 * A String `photoUrl`
