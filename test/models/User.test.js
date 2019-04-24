@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const { User } = require('../../lib/models/User');
+const User = require('../../lib/models/User');
 
 describe('User model', () => {
   beforeAll(() => {
@@ -41,5 +41,19 @@ describe('User model', () => {
     });
 
     expect(user._tempPassword).toEqual('password');
+  });
+
+  it('can compare passwords', () => {
+    return User.create({
+      username: 'Cool Thing',
+      password: 'password1234',
+      profilePhotoUrl: 'string.jpg'
+    })
+      .then(user => {
+        return user.compare('password1234');
+      })
+      .then(result => {
+        expect(result).toBeTruthy();
+      });
   });
 });
