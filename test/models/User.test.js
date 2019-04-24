@@ -56,4 +56,18 @@ describe('User model', () => {
         expect(result).toBeTruthy();
       });
   });
+
+  it('can compare bad passwords', () => {
+    return User.create({
+      username: 'Cool Thing',
+      password: 'password',
+      profilePhotoUrl: 'string.jpg'
+    })
+      .then(user => {
+        return user.compare('password1234');
+      })
+      .then(result => {
+        expect(result).toBeFalsy();
+      });
+  });
 });
