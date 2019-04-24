@@ -87,7 +87,6 @@ Create RESTful comments routes
   * delete a comment by id
   * respond with the deleted comment
   * NOTE: make sure the user attempting to delete the comment owns it
-* `GET /comments/prolific`
 
 ### Users
 
