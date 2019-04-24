@@ -15,7 +15,7 @@ module.exports = ({ userCount = 5, postCount = 100 } = {}) => {
         user: chance.pickone(createdUsers)._id,
         photoUrl: chance.url(),
         caption: chance.string(),
-        tags: [chance.words({ length: 6 })]
+        tags: [chance.word({ length: 6 })]
       }));
       
       return Post.create(posts);
