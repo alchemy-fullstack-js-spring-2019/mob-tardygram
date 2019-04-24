@@ -1,4 +1,5 @@
 require('dotenv').config();
+const seedData = require('./seed-data');
 const mongoose = require('mongoose');
 const connect = require('../../lib/utils/connect');
 
@@ -8,6 +9,10 @@ beforeAll(() => {
 
 beforeEach(() => {
   return mongoose.connection.dropDatabase();
+});
+
+beforeEach(() => {
+  return seedData();
 });
 
 afterAll(() => {
