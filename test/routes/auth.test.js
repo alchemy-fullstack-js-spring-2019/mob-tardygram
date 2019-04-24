@@ -79,4 +79,15 @@ describe('auth routes', () => {
         expect(res.body.error).toEqual('Invalid authentication');
       });
   });
+  it('it errors if user doesn\'t exist', () => {
+    return request(app)
+      .post('/api/v1/auth/signin')
+      .send({
+        username: 'Flavender',
+        password: 'dontletmein'
+      })
+      .then(res => {
+        expect(res.body.error).toEqual('Invalid authentication');
+      });
+  });
 });
