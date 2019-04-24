@@ -35,4 +35,29 @@ describe('auth routes', () => {
         });
       });
   });
+  it('signs in a user', () => {
+    return User.create({
+      username: 'Flavender',
+      password: 'letmein',
+      profilePhotoUrl: 'https://picture.com/profile.jpg'
+    })
+      .then(() => {
+        return request(app)
+          .post('/api/v1/signin')
+          .send({
+            username: 'Flavender',
+            password: 'letmein'
+          });
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          user: {
+            _id: expect.any(String),
+            username: 'Flavender',
+            profilePhotoUrl: 'https://picture.com/profile.jpg'
+          },
+          token: expect.any(String)
+        });
+      });
+  });
 });
