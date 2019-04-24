@@ -28,7 +28,8 @@ describe('auth routes', () => {
       .then(user => {
         expect(user.body).toEqual({
           user: {
-            username: 'Beezer'
+            username: 'Beezer',
+            _id: expect.any(String)
           },
           token: expect.any(String)
         });
