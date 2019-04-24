@@ -32,4 +32,14 @@ describe('User model', () => {
       _id: expect.any(mongoose.Types.ObjectId)
     });
   });
+
+  it('has a _tempPassword', () => {
+    const user = new User({
+      username: 'Cool Thing',
+      password: 'password',
+      profilePhotoUrl: 'string.jpg'
+    });
+
+    expect(user._tempPassword).toEqual('password');
+  });
 });
