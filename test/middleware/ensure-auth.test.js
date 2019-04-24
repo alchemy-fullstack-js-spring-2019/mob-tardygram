@@ -13,7 +13,7 @@ describe('ensure auth middleware', () => {
     };
     bearerToken(req, res, next);
   });
-  
+
   it('validates a good token', done => {
     const token = tokenize({ username:'test person' });
     const req = { token };
