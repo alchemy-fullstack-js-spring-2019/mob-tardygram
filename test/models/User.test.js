@@ -1,6 +1,8 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('../../lib/models/User');
 const { hash, compare } = require('../../lib/utils/hash');
+const { tokenize, untokenize } = require('../../lib/utils/token');
 
 describe('User model', () => {
 
@@ -64,6 +66,26 @@ describe('User model', () => {
       });
   });
 
+  it('compares clear txt with pw hash', async() => {
+    const pw = 'stuffthings';
+    const hashed = await hash(pw);
+    User.create({
+      username: 'cara',
+      password: pw,
+      passwordHash: hashed
+    })
+      .then(createdUser => {
+        expect(createdUser.compare(pw)).toBe(true);
+      });
+  });
+
+  it('has authToken method', () => {
+    const user = new User({ username: 'anna', password: '1234pw' });
+    const returnedToken = user.authToken();
+    const untokenized = untokenize(returnedToken);
+
+    expect(untokenized).toEqual({ username: 'anna', _id: user._id.toString() });
+  });
 
 
 });
