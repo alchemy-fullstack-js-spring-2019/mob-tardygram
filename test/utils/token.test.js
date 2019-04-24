@@ -15,6 +15,12 @@ describe('tokens', () => {
     expect(obj).toEqual({ username: 'billy' });
   });
 
+  it('can verify a token with expiration', () => {
+    const token = tokenize({ username: 'billy' });
+    const body = jwt.verify(token, process.env.AUTH_SECRET, { expiresIn: '1h' });
+    expect(body).toEqual({ payload: { username: 'billy' }, iat: expect.any(Number), exp: expect.any(Number) });
+  });
+
   it('returns error for bad token', () => {
     expect(() => untokenize('asbd')).toThrow('Bad token');
   });
