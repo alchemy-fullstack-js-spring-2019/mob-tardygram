@@ -57,5 +57,24 @@ describe('post routes', () => {
         });
       });
   });
+
+  it('updates post by id', () => {
+    return getPost()
+      .then(post => {
+        return request(app)
+          .patch(`/api/v1/posts/${post._id}`)
+          .send({ caption: 'updated caption yo!!!!' });
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          user: expect.any(String),
+          photoUrl: expect.any(String),
+          caption: 'updated caption yo!!!!',
+          tags: expect.any(Array)
+        });
+      });
+  });
+
 });
 
