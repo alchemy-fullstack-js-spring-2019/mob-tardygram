@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const request = require('supertest');
 const app = require('../../lib/app');
 const connect = require('../../lib/utils/connect');
-const Comment = require('../../lib/models/User');
+// const Comment = require('../../lib/models/User');
 
 describe('routes work for comments', () => {
   beforeAll(() => {
@@ -26,7 +26,6 @@ describe('routes work for comments', () => {
         password: 'forkknife'
       })
       .then(user => {
-        // console.log(user.body.user);
         return request(app)
           .post('/instantgram/posts')
           .send({
@@ -34,7 +33,6 @@ describe('routes work for comments', () => {
             photoUrl: 'photo'
           })
           .then(post => {
-            // console.log(post.body);
             return request(app)
               .post('/instantgram/comments')
               .send({
@@ -50,6 +48,38 @@ describe('routes work for comments', () => {
                   _id: expect.any(String),
                   __v: 0
                 });
+              });
+          });
+      }); 
+  });
+  it('gets a list of comment', () => {
+    return request(app)
+      .post('/instantgram/auth/signup')
+      .send({
+        username: 'benji',
+        password: 'forkknife'
+      })
+      .then(user => {
+        return request(app)
+          .post('/instantgram/posts')
+          .send({
+            user: user.body.user._id,
+            photoUrl: 'photo'
+          })
+          .then(post => {
+            return request(app)
+              .post('/instantgram/comments')
+              .send({
+                commentBy: post.body.user,
+                post: post.body._id,
+                comment: 'fun little comment'
+              })
+              .then(comment => {
+                return request(app)
+                  .delete(`/instantgram/comments/${comment.body._id}`)
+                  .then(deletedRes => {
+                    expect(deletedRes.body).toEqual(comment.body);
+                  });
               });
           });
       }); 
