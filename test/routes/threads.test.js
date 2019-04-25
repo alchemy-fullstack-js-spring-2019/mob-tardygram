@@ -1,9 +1,7 @@
 require('dotenv').config();
 const request = require('supertest');
 const app = require('../../lib/app');
-// const User = require('../../lib/models/User');
-// const Thread = require('../../lib/models/Thread');
-const { getUser, getThread } = require('../data-helpers');
+const { getUser } = require('../data-helpers');
 
 describe('thread routes', () => {
   it('creates a new Thread with POST', () => {
