@@ -93,7 +93,7 @@ describe('post routes', () => {
         });
       });
   });
-  
+
   it('throws error for incorrect token', async() => {
     const token = tokenize({ username: 'FAAKKKEE' });
     const post = await getPost();
@@ -108,7 +108,18 @@ describe('post routes', () => {
     });
   });
 
-  it('deletes a post with correct token', () => {
-    
+  it('deletes a post with correct token', async() => {
+    const post = await getPost();
+    const token = await getToken({ _id: post.user });
+    const res = await request(app)
+      .delete(`/api/v1/posts/${post._id}`)
+      .set('authorization', `Bearer ${token}`);
+    expect(res.body).toEqual({
+      caption: post.caption,
+      photoUrl: post.photoUrl,
+      tags: post.tags,
+      user: post.user,
+      _id: post._id
+    });
   });
 });
