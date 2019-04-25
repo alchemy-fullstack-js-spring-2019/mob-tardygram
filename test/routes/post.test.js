@@ -45,7 +45,7 @@ describe('post routes', () => {
     return getPost()
       .then(post => {
         return request(app)
-          .get(`/api/v1/posts${post._id}`);
+          .get(`/api/v1/posts/${post._id}`);
       })
       .then(res => {
         expect(res.body).toEqual({
