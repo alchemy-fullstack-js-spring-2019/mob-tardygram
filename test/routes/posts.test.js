@@ -81,4 +81,40 @@ describe('Post routes', () => {
           });
       });
   });
+
+  it.only('can patch users caption by id', () => {
+    return User.findOne({ username: 'alchemist' })
+      .then(user => {
+        return Promise.all([
+          request(app)
+            .post('/api/v1/posts')
+            .set('Authorization', `Bearer ${user.authToken()}`)
+            .send({
+              user: user._id,
+              photoUrl: 'image.jpg',
+              caption: 'hell yeah',
+              tags: ['taylorswift', 'happyfeet', 'releaseevents']
+            }),
+          Promise.resolve(user)
+        ]);
+      })
+      .then(([createdPost, user]) => {
+        return request(app)
+          .patch(`/api/v1/posts/${createdPost.body._id}`)
+          .set('Authorization', `Bearer ${user.authToken()}`)
+          .send({
+            caption: 'Elizabeth Warren 2020'
+          })
+          .then(res => {
+            expect(res.body).toEqual({
+              user: expect.any(String),
+              photoUrl: 'image.jpg',
+              caption: 'Elizabeth Warren 2020',
+              tags: ['taylorswift', 'happyfeet', 'releaseevents'],
+              _id: expect.any(String)
+            });
+          });
+      });
+      
+  });
 });
