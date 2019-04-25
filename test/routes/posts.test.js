@@ -1,4 +1,5 @@
-require('../connect-db');
+const { getUser } = require('../data-helpers');
+const Post = require('../../lib/models/Post');
 const User = require('../../lib/models/User');
 const request = require('supertest');
 const app = require('../../lib/app');
@@ -25,6 +26,13 @@ describe('posts routes', () => {
       });
   });
   
+  let testUser, testUserPosts, token;
+  beforeEach(async() => {
+    testUser = await getUser();
+    testUserPosts = await Post.find({ user: testUser._id });
+    const actualTestUser = await User.findOne({ _id: testUser._id });
+    token = actualTestUser.authToken();
+  });
 
   it('test that a user can post', async() => {
     expect(userPost.body).toEqual({
@@ -41,7 +49,7 @@ describe('posts routes', () => {
     const posts = await request(app)
       .get('/api/v1/posts');
 
-    expect(posts.body).toHaveLength(1);
+    expect(posts.body).toHaveLength(201);
   });
   it('gets a post by id', async() => {
     const id = userPost.body._id;
@@ -57,22 +65,20 @@ describe('posts routes', () => {
     });
   });
   it('updates a post', async() => {
-    const id = userPost.body._id;
     const updatedPost = await request(app)
-      .patch(`/api/v1/posts/${id}`)
-      .set('Authorization', `Bearer ${res.body.token}`)
+      .patch(`/api/v1/posts/${testUserPosts[0]._id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send({
         photoUrl: 'dont use me',
         caption: 'uglycaptionhere',
       });
     expect(updatedPost.body).toEqual({
-      user: res.body.user._id,
-      photoUrl: 'cutephotohere',
+      user: expect.anything(),
+      photoUrl: testUserPosts[0].photoUrl,
       caption: 'uglycaptionhere',
-      hashtags: ['omg', 'wow'],
+      hashtags: [testUserPosts[0].hashtags[0], testUserPosts[0].hashtags[1], testUserPosts[0].hashtags[2]],
       __v: 0,
-      _id: expect.any(String)
+      _id: testUserPosts[0]._id.toString()
     });
-
   });
 });
