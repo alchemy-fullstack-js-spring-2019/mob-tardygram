@@ -3,8 +3,8 @@ const User = require('../../lib/models/User');
 
 module.exports = ({
   userCount = 10,
-  // postCount = 25,
-  // commentCount = 50,
+  postCount = 25,
+  commentCount = 50,
 
 } = {}) => {
   const users = [...Array(userCount)]
