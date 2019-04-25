@@ -93,6 +93,7 @@ describe('post routes', () => {
         });
       });
   });
+  
   it('throws error for incorrect token', async() => {
     const token = tokenize({ username: 'FAAKKKEE' });
     const post = await getPost();
@@ -105,5 +106,9 @@ describe('post routes', () => {
     expect(res.body).toEqual({
       error: 'Unauthorized Request'
     });
+  });
+
+  it('deletes a post with correct token', () => {
+    
   });
 });
