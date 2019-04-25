@@ -1,46 +1,36 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
-const connect = require('../../lib/utils/connect');
 const request = require('supertest');
 const app = require('../../lib/app');
 const User = require('../../lib/models/User');
 const Post = require('../../lib/models/Post');
+const { getUser, getPosts, getPost } = require('../utils/data-helper');
 
 describe('post routes', () => {
-  beforeAll(() => {
-    return connect();
-  });
-  beforeEach(() => {
-    return mongoose.connection.dropDatabase();
-  });
-  afterAll(() => {
-    return mongoose.connection.close();
-  });
-
-  it('makes new post', () => {
-    return request(app)
-      .post('/api/v1/auth/signup')
-      .send({ username: 'billy', password: 'billyJowell' })
-      .then(res => {
+  it.only('makes new post', () => {
+    return Promise.all([
+      getUser(),
+      getPost()
+    ])
+      .then(([user, post])=> {
         return request(app)
           .post('/api/v1/posts')
-          .send({
-            user: res.body.user._id,
-            photoUrl: 'http://url.com',
-            caption: 'my cool pic',
-            tags: ['tag']
-          })
-          .then(res => {
-            expect(res.body).toEqual({
-              _id: expect.any(String),
-              __v: 0,
-              user: expect.any(String),
-              photoUrl: 'http://url.com',
-              caption: 'my cool pic',
-              tags: ['tag']
-            });
+          .send({ 
+            user: user._id,
+            photoUrl: post.photoUrl,
+            caption: post.caption,
+            tags: post.tags
           });
-  
+      })
+      .then(res => {
+        console.log(res.body);
+        expect(res.body).toEqual({
+          user: expect.any(String),
+          photoUrl: expect.any(String),
+          caption: expect.any(String),
+          tags: expect.any(Array),
+          _id: expect.any(String),
+          __v: 0
+        });
       });
   });
 
@@ -67,3 +57,24 @@ describe('post routes', () => {
       });
   });
 });
+
+// return request(app)
+//           .post('/api/v1/posts')
+//           .send({
+//             user: user.body.user._id,
+//             photoUrl: 'http://url.com',
+//             caption: 'my cool pic',
+//             tags: ['tag']
+//           })
+//           .then(res => {
+//             expect(res.body).toEqual({
+//               _id: expect.any(String),
+//               __v: 0,
+//               user: expect.any(String),
+//               photoUrl: 'http://url.com',
+//         caption: 'my cool pic',
+//         tags: ['tag']
+//       });
+//     });
+  
+// });

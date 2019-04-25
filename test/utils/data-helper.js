@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const connect = require('../../lib/utils/connect');
 const User = require('../../lib/models/User');
 const Post = require('../../lib/models/Post');
-const seedData = require('./seed-data');
+const { seedUsers, seedPosts } = require('./seed-data');
 
 beforeAll(() => {
   return connect();
@@ -13,7 +13,11 @@ beforeEach(() => {
 });
 
 beforeEach(() => {
-  return seedData();
+  return seedUsers();
+});
+
+beforeEach(() => {
+  return seedPosts();
 });
 
 afterAll(() => {
