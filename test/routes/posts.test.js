@@ -6,7 +6,7 @@ const User = require('../../lib/models/User');
 const Post = require('../../lib/models/Post');
 
 describe('Post routes', () => {
-  it('creates a new post', () => {
+  it('requires an authenticated user to make a post', () => {
     return User.findOne()
       .then(foundUser => {
         return request(app)
@@ -18,17 +18,7 @@ describe('Post routes', () => {
             tags: ['taylorswift', 'happyfeet', 'releaseevents']
           })
           .then(res => {
-            expect(res.body).toEqual({
-              user: {
-                _id: foundUser._id,
-                username: foundUser.username
-              },
-              photoUrl: 'image.jpg',
-              caption: 'hell yeah',
-              tags: ['taylorswift', 'happyfeet', 'releaseevents'],
-              _id: expect.any(String),
-              __v: 0
-            });
+            expect(res.body.error).toEqual('jwt must be provided');
           });
       });
   });
