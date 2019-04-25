@@ -110,11 +110,11 @@ describe('POST ROUTES', () => {
           })
           .then(post => {
             return request(app)
-              .get(`/instantgram/posts/${post.body.user}`)
+              .get(`/instantgram/posts/${post.body._id}`)
               .then(res => {
                 expect(res.body).toEqual({
                   __v: 0,
-                  _id: expect.any(String),
+                  _id: post.body._id,
                   photoUrl: 'photo',
                   tags: [],
                   user: user.body.user._id
@@ -122,8 +122,55 @@ describe('POST ROUTES', () => {
               });
           });
       });
-      
   });
-
-
+  it('patches a post', () => {
+    return request(app)
+      .post('/instantgram/auth/signup')
+      .send({
+        username: 'notfine',
+        password: 'password'
+      })
+      .then(user => {
+        return request(app)
+          .post('/instantgram/posts')
+          .send({
+            user: user.body.user._id,
+            photoUrl: 'photo',
+            caption: 'words'
+          })
+          .then(post => {
+            return request(app)
+              .patch(`/instantgram/posts/${post.body._id}`)
+              .send({ caption: 'updated' })
+              .then(res => {
+                expect(res.body).toEqual({
+                  user: user.body.user._id,
+                  _id: post.body._id,
+                  photoUrl: 'photo',
+                  caption: 'words',
+                  tags: []
+                });
+              });
+          });
+      });
+  });
+  // it.skip('can delete a post', () => {
+  //   return request(app)
+  //     .post('/instantgram/auth/signup')
+  //     .send({
+  //       username: 'fake',
+  //       password: 'pword'
+  //     })
+  //     .then(user => {
+  //       return request(app)
+  //         .post('/instantgram/posts')
+  //         .send({
+  //           user: user.body.user._id,
+  //           photoUrl: 'photo'
+  //         })
+  //         .then(post => {
+  //           return request(app)
+  //             .delete(`/instantgram/posts/${post.body._id}`)
+      
+  // });
 });
