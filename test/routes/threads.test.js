@@ -14,7 +14,7 @@ describe('thread routes', () => {
           .send({ username: user.username, password: 'password' });
       })
       .then(user => {
-        console.log(user.body.user._id);
+        console.log(user.body.token);
         return request(app)
           .post('/api/v1/threads')
           .set('authorization', `Bearer ${user.body.token}`)
