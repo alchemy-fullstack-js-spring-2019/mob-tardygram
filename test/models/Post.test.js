@@ -17,9 +17,11 @@ describe('post test', () => {
   });
 
   it('requires a user', () => {
-    const post = new Post({ });
+    const post = new Post({});
     const errors = post.validateSync().errors;
     expect(errors.user.message).toEqual('Path `user` is required.');
+    expect(errors.photoUrl.message).toEqual('Path `photoUrl` is required.');
   });
+
 
 });
