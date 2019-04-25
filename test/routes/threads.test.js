@@ -10,9 +10,16 @@ describe('thread routes', () => {
     return getUser()
       .then(user => {
         return request(app)
+          .post('/api/v1/auth/signin')
+          .send({ username: user.username, password: 'password' });
+      })
+      .then(user => {
+        console.log(user.body.user._id);
+        return request(app)
           .post('/api/v1/threads')
+          .set('authorization', `Bearer ${user.body.token}`)
           .send({
-            username: user._id,
+            username: user.body.user._id,
             photoUrl: 'blah.jpg',
             caption : 'Me and Shippy, so happy!',
             hashtag: ['#lovethatshippy', '#truelove', '#trustno1']
@@ -27,5 +34,7 @@ describe('thread routes', () => {
           hashtag: ['#lovethatshippy', '#truelove', '#trustno1']
         });
       });
+          
+          
   });
 });

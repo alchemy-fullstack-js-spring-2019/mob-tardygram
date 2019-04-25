@@ -11,7 +11,7 @@ module.exports = ({
   const userStorage = [...Array(userCount)].map(() => ({
     username: chance.name(),
     profilePhoto: chance.string({ length: 5 }),
-    password: chance.string({ length: 13 })
+    password: 'password'
   }));
 
   return User

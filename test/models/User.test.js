@@ -9,6 +9,7 @@ describe('User model', () => {
     const user = new User({
       username: 'tom@myspace.com'
     });
+    
     expect(user.toJSON()).toEqual({
       username: 'tom@myspace.com',
       _id: expect.any(mongoose.Types.ObjectId)
