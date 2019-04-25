@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../../lib/app');
-const { getUser, getPosts, getToken } = require('../data-helpers');
+const { getUser, getPosts, getPost, getToken } = require('../data-helpers');
 
 describe('post routes', () => {
   
@@ -37,6 +37,27 @@ describe('post routes', () => {
       })
       .then(res => {
         expect(res.body).toHaveLength(100);
+      });
+  });
+
+  it('can get a post by id', () => {
+    return getPost()
+      .then(post => {
+        return Promise.all([
+          Promise.resolve(post),
+          request(app)
+            .get(`/api/v1/posts/${post._id}`) 
+        ]);
+      })
+      .then(([post, res]) => {
+        expect(res.body).toEqual({
+          _id: post._id.toString(),
+          photoUrl: post.photoUrl,
+          user: post.user,
+          caption: post.caption,
+          tags: post.tags,
+          comments: [expect.any(Object)]
+        });
       });
   });
 });
