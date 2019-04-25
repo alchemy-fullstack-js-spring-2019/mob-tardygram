@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const request = require('supertest');
 const app = require('../../lib/app');
 // const { getUser, getUsers } = require('../data/dataHelpers');
-const Post = require('../../lib/models/Post');
+// const Post = require('../../lib/models/Post');
 const connect = require('../../lib/utils/connect');
 
 describe('POST ROUTES', () => {
