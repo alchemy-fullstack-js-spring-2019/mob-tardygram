@@ -24,4 +24,7 @@ Done
   - user model
   - hash utils
   - token utils
-  
+
+
+  To Do:
+  - include comments in get post by id (and test)

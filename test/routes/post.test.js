@@ -6,7 +6,7 @@ const Post = require('../../lib/models/Post');
 const { getUser, getPosts, getPost } = require('../utils/data-helper');
 
 describe('post routes', () => {
-  it.only('makes new post', () => {
+  it('makes new post', () => {
     return Promise.all([
       getUser(),
       getPost()
@@ -22,7 +22,6 @@ describe('post routes', () => {
           });
       })
       .then(res => {
-        console.log(res.body);
         expect(res.body).toEqual({
           user: expect.any(String),
           photoUrl: expect.any(String),
@@ -34,47 +33,29 @@ describe('post routes', () => {
       });
   });
 
-  it('GET all posts', () => {
+  it('GETs all posts', () => {
     return request(app)
-      .post('/api/v1/auth/signup')
-      .send({ username: 'billy', password: 'billyJowell' })
+      .get('/api/v1/posts')
       .then(res => {
+        expect(res.body).toHaveLength(100);
+      });
+  });
+
+  it('gets a post by id', () => {
+    return getPost()
+      .then(post => {
         return request(app)
-          .post('/api/v1/posts')
-          .send({
-            user: res.body.user._id,
-            photoUrl: 'http://url.com',
-            caption: 'my cool pic',
-            tags: ['tag']
-          })
-          .then(() => {
-            return request(app)
-              .get('/api/v1/posts');
-          })
-          .then(res => {
-            expect(res.body).toHaveLength(1);
-          });
+          .get(`/api/v1/posts${post._id}`);
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          user: expect.any(String),
+          photoUrl: expect.any(String),
+          caption: expect.any(String),
+          tags: expect.any(Array)
+        });
       });
   });
 });
 
-// return request(app)
-//           .post('/api/v1/posts')
-//           .send({
-//             user: user.body.user._id,
-//             photoUrl: 'http://url.com',
-//             caption: 'my cool pic',
-//             tags: ['tag']
-//           })
-//           .then(res => {
-//             expect(res.body).toEqual({
-//               _id: expect.any(String),
-//               __v: 0,
-//               user: expect.any(String),
-//               photoUrl: 'http://url.com',
-//         caption: 'my cool pic',
-//         tags: ['tag']
-//       });
-//     });
-  
-// });

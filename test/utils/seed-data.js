@@ -10,7 +10,7 @@ function seedUsers(userCount = 20) {
   return User.create(users);
 }
 
-function seedPosts(userCount = 20) {
+function seedPosts(userCount = 100) {
   return seedUsers()
     .then(users => {
       const posts = [...Array(userCount)].map(() => ({
