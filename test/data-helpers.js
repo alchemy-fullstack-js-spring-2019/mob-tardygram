@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const seedData = require('./seed-data');
 const User = require('../lib/models/User');
 const Post = require('../lib/models/Post');
+const Comment = require('../lib/models/Comment');
 const connect = require('../lib/utils/connect');
 const request = require('supertest');
 const app = require('../lib/app');
@@ -51,5 +52,6 @@ const createGetters = Model => ({
 module.exports = {
   ...createGetters(User),
   ...createGetters(Post),
+  ...createGetters(Comment),
   getToken: () => token
 };
