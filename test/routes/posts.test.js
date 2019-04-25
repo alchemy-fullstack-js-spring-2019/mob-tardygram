@@ -106,7 +106,7 @@ describe('post routes', () => {
       .then(createdPost => {
         return request(app)
           .delete(`/api/v1/posts/${createdPost.body._id}`)
-          .set('Authorization', `Bearer ${token}`)
+          .set('Authorization', `Bearer ${token}`);
       })
       .then(res => {
         expect(res.body).toEqual({
