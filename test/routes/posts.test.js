@@ -3,7 +3,6 @@ const app = require('../../lib/app');
 const { getUser, getPosts, getPost, getToken } = require('../data-helpers');
 
 describe('post routes', () => {
-  
   it('can create a new post', async() => {
     const token = await getToken();
     return getUser()
