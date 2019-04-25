@@ -28,9 +28,9 @@ const createGetters = Model => ({
   [`get${Model.modelName}s`]: query => Model.find(query).then(models => models.map(prepare))
 });
 
-function getToken() {
+function getToken(query) {
   return User
-    .findOne()
+    .findOne(query)
     .then(user => user.authToken());
 }
 

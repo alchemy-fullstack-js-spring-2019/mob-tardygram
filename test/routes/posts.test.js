@@ -56,6 +56,40 @@ describe('post routes', () => {
   });
 
   it('patches a post by id', () => {
-    
+    return getToken()
+      .then(token => {
+        return Promise.all([
+          Promise.resolve(token),
+          request(app)
+            .post('/api/v1/posts')
+            .set('authorization', `Bearer ${token}`)
+            .send({
+              caption: 'feeling cute might drop out of ACL later',
+              photoUrl: 'http://avatar.com'
+            })
+        ]);
+      })
+      .then(([token, res]) => {
+        return request(app)
+          .patch(`/api/v1/posts/${res.body._id}`)
+          .set('authorization', `Bearer ${token}`)
+          .send({
+            caption: 'new caption',
+            photoUrl: 'http://avatar222.com'
+          });
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          caption: 'new caption',
+          photoUrl: 'http://avatar.com',
+          _id: expect.any(String),
+          tags: [],
+          user: {
+            _id: expect.any(String),
+            username: expect.any(String),
+            profilePhotoUrl: expect.any(String)
+          },
+        });
+      });
   });
 });
