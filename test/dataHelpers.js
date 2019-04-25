@@ -29,7 +29,9 @@ const createGetters = Model => ({
 });
 
 function getToken() {
-  
+  return User
+    .findOne()
+    .then(user => user.authToken());
 }
 
 module.exports = {

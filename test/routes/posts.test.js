@@ -1,13 +1,11 @@
 const app = require('../../lib/app');
 const request = require('supertest');
-const { getUser, getPost } = require('../dataHelpers');
-const mongoose = require('mongoose');
+const { getPost, getToken } = require('../dataHelpers');
 
 describe('post routes', () => {
   it('creates a post', () => {
-    return getUser()
-      .then(user => {
-        const token = user.authToken();
+    return getToken()
+      .then(token => {
         return request(app)
           .post('/api/v1/posts')
           .set('authorization', `Bearer ${token}`)
@@ -34,6 +32,7 @@ describe('post routes', () => {
         expect(res.body).toHaveLength(20);
       });
   });
+
   it('gets a post by id', () => {
     return getPost()
       .then(post => Promise.all([
@@ -54,5 +53,9 @@ describe('post routes', () => {
           caption: post.caption,
         });
       });
+  });
+
+  it('patches a post by id', () => {
+    
   });
 });
