@@ -57,5 +57,28 @@ describe('Post routes', () => {
       });
   });
 
-
+  it('can get a post by id', () => {
+    return Post.findOne()
+      .then(foundPost => {
+        return request(app)
+          .get(`/api/v1/posts/${foundPost._id}`)
+          .then(post => {
+            expect(post.body).toEqual({
+              user: { 
+                username: expect.any(String),
+                profilePhotoUrl: expect.any(String),
+                _id: expect.any(String)
+              },
+              photoUrl: foundPost.photoUrl,
+              caption: foundPost.caption,
+              tags: [
+                expect.any(String),
+                expect.any(String),
+                expect.any(String)
+              ],
+              _id: expect.any(String)
+            });
+          });
+      });
+  });
 });
