@@ -56,4 +56,23 @@ describe('posts routes', () => {
       _id: expect.any(String)
     });
   });
+  it('updates a post', async() => {
+    const id = userPost.body._id;
+    const updatedPost = await request(app)
+      .patch(`/api/v1/posts/${id}`)
+      .set('Authorization', `Bearer ${res.body.token}`)
+      .send({
+        photoUrl: 'dont use me',
+        caption: 'uglycaptionhere',
+      });
+    expect(updatedPost.body).toEqual({
+      user: res.body.user._id,
+      photoUrl: 'cutephotohere',
+      caption: 'uglycaptionhere',
+      hashtags: ['omg', 'wow'],
+      __v: 0,
+      _id: expect.any(String)
+    });
+
+  });
 });
