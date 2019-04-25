@@ -4,19 +4,20 @@ const mongoose = require('mongoose');
 const seedData = require('./seed-data');
 const User = require('../lib/models/User');
 const Post = require('../lib/models/Post');
+const Comment = require('../lib/models/Comment');
 
-beforeAll(() => {
-  return connect();
+beforeAll(async() => {
+  await connect();
 });
-beforeEach(() => {
-  return mongoose.connection.dropDatabase();
+beforeEach(async() => {
+  await mongoose.connection.dropDatabase();
 });
 beforeEach(async() => {
   await seedData();
 });
 
-afterAll(() => {
-  return mongoose.connection.close();
+afterAll(async() => {
+  await mongoose.connection.close();
 });
 
 const prepare = model => JSON.parse(JSON.stringify(model));
@@ -31,4 +32,5 @@ const createGetters = Model => {
 module.exports = {
   ...createGetters(User),
   ...createGetters(Post),
+  ...createGetters(Comment)
 };

@@ -1,10 +1,13 @@
 const chance = require('chance').Chance();
 const User = require('../lib/models/User');
 const Post = require('../lib/models/Post');
+const Comment = require('../lib/models/Comment');
 
 module.exports = async({
-  userCount = 20,
-  postCount = 200,
+  userCount = 10,
+  postCount = 50,
+  commentCount = 100
+
 } = {}) => {
   const users = [...Array(userCount)]
     .map(() => ({
@@ -21,5 +24,15 @@ module.exports = async({
       hashtags: [chance.word({ length: 5 }), chance.word({ length: 5 }), chance.word({ length: 5 })]
     }));
   const createdPosts = await Post.create(posts);
-  return [createdUsers, createdPosts];
+
+
+  const comments = [...Array(commentCount)]
+    .map(()=>({
+      commentBy: chance.pickone(createdUsers)._id,
+      post: chance.pickone(createdPosts)._id,
+      comment: chance.sentence({ words:8 })
+    }));
+  const createdComments = await Comment.create(comments);
+
+  return [createdUsers, createdPosts, createdComments];
 };
