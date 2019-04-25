@@ -81,4 +81,36 @@ describe('thread routes', () => {
         });
       });
   });
+
+  it('deletes a thread - user must be authenticated', () => {
+    return getUser()
+      .then(user => {
+        return request(app)
+          .post('/api/v1/auth/signin')
+          .send({ username: user.username, password: 'password' });
+      })
+      .then(user => {
+        return Promise.all([
+          Promise.resolve(user.body),
+          request(app)
+            .post('/api/v1/threads')
+            .set('authorization', `Bearer ${user.body.token}`)
+            .send({
+              username: user.body.user._id,
+              photoUrl: 'blah.jpg',
+              caption : 'Me and Shippy, so happy!'
+            })
+        ]);
+      })
+      .then(([user, createdThread]) => {
+        return request(app)
+          .delete(`/api/v1/threads/${createdThread.body._id}`)
+          .set('authorization', `Bearer ${user.token}`);
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String)
+        });
+      });
+  });
 });
