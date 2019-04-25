@@ -1,6 +1,7 @@
 const app = require('../../lib/app');
 const request = require('supertest');
 const { getPost, getToken } = require('../dataHelpers');
+const { tokenize } = require('../../lib/utils/token');
 
 describe('post routes', () => {
   it('creates a post', () => {
@@ -91,5 +92,18 @@ describe('post routes', () => {
           },
         });
       });
+  });
+  it('throws error for incorrect token', async() => {
+    const token = tokenize({ username: 'FAAKKKEE' });
+    const post = await getPost();
+    const res = await request(app)
+      .patch(`/api/v1/posts/${post._id}`)
+      .set('authorization', `Bearer ${token}`)
+      .send({
+        caption: 'new caption'
+      });
+    expect(res.body).toEqual({
+      error: 'Unauthorized Request'
+    });
   });
 });
