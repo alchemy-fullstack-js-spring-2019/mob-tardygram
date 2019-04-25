@@ -14,7 +14,6 @@ describe('thread routes', () => {
           .send({ username: user.username, password: 'password' });
       })
       .then(user => {
-        console.log(user.body.token);
         return request(app)
           .post('/api/v1/threads')
           .set('authorization', `Bearer ${user.body.token}`)
@@ -22,7 +21,7 @@ describe('thread routes', () => {
             username: user.body.user._id,
             photoUrl: 'blah.jpg',
             caption : 'Me and Shippy, so happy!',
-            hashtag: ['#lovethatshippy', '#truelove', '#trustno1']
+            hashtags: ['#lovethatshippy', '#truelove', '#trustno1']
           });
       })
       .then(res => {
@@ -31,7 +30,7 @@ describe('thread routes', () => {
           username: expect.any(String),
           photoUrl: 'blah.jpg',
           caption : 'Me and Shippy, so happy!',
-          hashtag: ['#lovethatshippy', '#truelove', '#trustno1']
+          hashtags: ['#lovethatshippy', '#truelove', '#trustno1']
         });
       });
           
