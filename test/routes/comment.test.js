@@ -2,7 +2,7 @@ require('dotenv').config();
 const chance = require('chance').Chance();
 const request = require('supertest');
 const app = require('../../lib/app');
-const { getUser, getPost, getToken } = require('../utils/data-helper');
+const { getUser, getToken } = require('../utils/data-helper');
 
 describe('comment routes', () => {
 
@@ -40,6 +40,47 @@ describe('comment routes', () => {
       });
   });
 
+  // delete by id test
+  it('deletes by id', () => {
+    return getUser({ username: 'person0' })
+      .then(user=> {
+        return request(app)
+          .post('/api/v1/posts')
+          .set('Authorization', `Bearer ${getToken()}`)
+          .send({ 
+            user: user._id,
+            photoUrl: chance.url(),
+            caption: chance.string(),
+            tags: [chance.string()]
+          });
+      })
+      .then(post => {
+        return request(app)
+          .post('/api/v1/comments')
+          .set('Authorization', `Bearer ${getToken()}`)
+          .send({
+            commentBy: post.body.user,
+            post: post.body._id,
+            comment: 'this is my cool comment'
+          });
+      })
+      .then(comment => {
+        return request(app)
+          .delete(`/api/v1/comments/${comment.body._id}`);
+      })
+      .then(res => {
+        console.log(res.body);
+        expect(res.body).toEqual({
+          commentBy: res.body.commentBy,
+          post: res.body.post,
+          comment: 'this is my cool comment',
+          _id: expect.any(String)
+        });
+      });
+  });
+
+
+  // get all comments by user, id
 
   
 });
