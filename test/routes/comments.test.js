@@ -1,16 +1,14 @@
-const { getUser, getPost, getComment } = require('../data-helpers');
+const { getUser, getPost } = require('../data-helpers');
 const request = require('supertest');
 const app = require('../../lib/app');
 const User = require('../../lib/models/User');
-const Post = require('../../lib/models/Post');
 const Comment = require('../../lib/models/Comment');
 
 describe('comments route tests', () => {
 
-  let testUser, testUserPosts, testUserComments, token;
+  let testUser, testUserComments, token;
   beforeEach(async() => {
     testUser = await getUser();
-    testUserPosts = await Post.find({ user: testUser._id });
     testUserComments = await Comment.find({ commentBy: testUser._id });
     const actualTestUser = await User.findOne({ _id: testUser._id });
     token = actualTestUser.authToken();

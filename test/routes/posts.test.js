@@ -60,11 +60,10 @@ describe('posts routes', () => {
 
     expect(posts.body).toHaveLength(51);
   });
-  it.only('gets a post by id', async() => {
+  it('gets a post by id', async() => {
     const id = userPost.body._id;
     const post = await request(app)
       .get(`/api/v1/posts/${id}`);
-    console.log(post.body);
     expect(post.body).toEqual({
       user: {
         _id: expect.any(String),
