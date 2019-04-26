@@ -118,7 +118,7 @@ describe('Post routes', () => {
       
   });
 
-  it.only('can delete post by id', () => {
+  it('can delete post by id', () => {
     return User.findOne({ username: 'alchemist' })
       .then(user => {
         return Promise.all([
