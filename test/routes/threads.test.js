@@ -41,9 +41,52 @@ describe('thread routes', () => {
       });
   });
 
-  // it('gets posts by id', () => {
-  //   WRITE AFTER COMPLETING COMMENT
-  // });
+  it('gets posts by id', async() => {
+    const user = await getUser();
+
+    const authUser = await request(app)
+      .post('/api/v1/auth/signin')
+      .send({ username: user.username, password: 'password' });
+
+    const thread = await request(app)
+      .post('/api/v1/threads')
+      .set('authorization', `Bearer ${authUser.body.token}`)
+      .send({
+        username: authUser.body.user._id,
+        photoUrl: 'blah.jpg',
+        caption : 'Me and Shippy, so happy!'
+      });
+
+    // eslint-disable-next-line no-unused-vars
+    const comment = await request(app)
+      .post('/api/v1/comments')
+      .set('authorization', `Bearer ${authUser.body.token}`)
+      .send({
+        username: authUser.body.user._id,
+        thread: thread.body._id,
+        body: 'Wow, you and Shippy are adorable! :)'
+      });
+
+    return request(app)
+      .get(`/api/v1/threads/${thread.body._id}`)
+      .then(fullThread => {
+        expect(fullThread.body).toEqual({
+          _id: expect.any(String),
+          caption: 'Me and Shippy, so happy!',
+          hashtags: [],
+          photoUrl: 'blah.jpg',
+          username: { username: authUser.body.user.username, _id: expect.any(String) },
+          comments: [{
+            _id: expect.any(String),
+            body: 'Wow, you and Shippy are adorable! :)',
+            username: {
+              username: authUser.body.user.username,
+              _id: expect.any(String)
+            }
+          }]
+        });
+      });
+  });
 
   it('updates a thread caption - user must be authenticated', () => {
     return getUser()
