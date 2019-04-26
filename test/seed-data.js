@@ -3,7 +3,7 @@ const User = require('../lib/models/User');
 const Post = require('../lib/models/Post');
 const Comment = require('../lib/models/Comment');
 
-module.exports = ({ userCount = 5, postCount = 100, commentCount = 150 } = {}) => {
+module.exports = ({ userCount = 20, postCount = 100, commentCount = 250 } = {}) => {
   const users = [...Array(userCount)].map(() => ({
     username: chance.name(),
     profilePhotoUrl: chance.url(),
