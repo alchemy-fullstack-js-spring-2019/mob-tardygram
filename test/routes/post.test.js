@@ -192,12 +192,10 @@ describe('POST ROUTES', () => {
                 return request(app)
                   .get(`/instantgram/posts/${comment.body.post}`)
                   .then(foundPost => {
-                    console.log('foundpost', foundPost.body);
                     expect(foundPost.body).toEqual({
                       comments: [{
                         _id: expect.any(String),
                         comment: 'sassy',
-                        // post: post.body._id,
                         commentBy: post.body.user
                       }],
                       post: {
