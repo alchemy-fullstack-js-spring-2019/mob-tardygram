@@ -95,4 +95,10 @@ describe('posts routes', () => {
       _id: testUserPosts[0]._id.toString()
     });
   });
+  
+  it('gets top 10 posts', async() => {
+    const top10 = await request(app)
+      .get('/api/v1/posts/popular');
+    expect(top10.body).toHaveLength(10);
+  });
 });

@@ -8,12 +8,12 @@ describe('auth routes', () => {
     const response = await request(app)
       .post('/api/v1/auth/signup')
       .send({
-        username: 'intro_mode',
+        username: 'is it this one',
         password: 'youllneverguess'
       });
     expect(response.body).toEqual({
       user: {
-        username: 'intro_mode',
+        username: 'is it this one',
         _id: expect.any(String),
         profilePhotoUrl: expect.any(String)
       },
@@ -23,19 +23,19 @@ describe('auth routes', () => {
 
   it('can sign in a user', async() => {
     await User.create({
-      username: 'intro_mode',
+      username: 'is it this one',
       password: 'youllneverguess'
     });
     const response = await request(app)
       .post('/api/v1/auth/signin')
       .send({
-        username: 'intro_mode',
+        username: 'is it this one',
         password: 'youllneverguess'
       });
 
     expect(response.body).toEqual({
       user: {
-        username: 'intro_mode',
+        username: 'is it this one',
         _id: expect.any(String),
         profilePhotoUrl: expect.any(String)
       },
