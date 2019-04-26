@@ -1,24 +1,24 @@
 require('dotenv').config();
+const chance = require('chance').Chance();
 const request = require('supertest');
 const app = require('../../lib/app');
 const User = require('../../lib/models/User');
 const Post = require('../../lib/models/Post');
-const { getUser, getPosts, getPost } = require('../utils/data-helper');
+const { getUser, getPosts, getPost, getToken } = require('../utils/data-helper');
 
 describe('post routes', () => {
+
   it('makes new post', () => {
-    return Promise.all([
-      getUser(),
-      getPost()
-    ])
-      .then(([user, post])=> {
+    return getUser({ username: 'person0' })
+      .then(user=> {
         return request(app)
           .post('/api/v1/posts')
+          .set('Authorization', `Bearer ${getToken()}`)
           .send({ 
             user: user._id,
-            photoUrl: post.photoUrl,
-            caption: post.caption,
-            tags: post.tags
+            photoUrl: chance.url(),
+            caption: chance.string(),
+            tags: [chance.string()]
           });
       })
       .then(res => {
@@ -59,11 +59,16 @@ describe('post routes', () => {
   });
 
   it('updates post by id', () => {
-    return getPost()
-      .then(post => {
-        return request(app)
-          .patch(`/api/v1/posts/${post._id}`)
-          .send({ caption: 'updated caption yo!!!!' });
+    return getUser({ username: 'person0' })
+      .then(user => {
+        return getPost()
+          .then(post => {
+            return request(app)
+              .patch(`/api/v1/posts/${post._id}`)
+              .set('Authorization', `Bearer ${getToken()}`)
+              .send({ caption: 'updated caption yo!!!!' });
+          });
+
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -75,6 +80,11 @@ describe('post routes', () => {
         });
       });
   });
+
+  // it('deletes a post by id', () => {
+  //   return getPost()
+  //     .then();
+  // });
 
 });
 
