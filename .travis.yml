@@ -2,5 +2,4 @@ language: node_js
 node_js:
   - "node"
 services: mongodb
-env: 
-  - MONGODB_URI=mongodb://localhost:27017/tardygram
+env: AUTH_SECRET=s3cret MONGODB_URI=mongodb://localhost:27017/tardygram
