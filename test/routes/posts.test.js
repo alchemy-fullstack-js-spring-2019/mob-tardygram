@@ -24,6 +24,15 @@ describe('posts routes', () => {
         caption: 'cutecaptionhere',
         hashtags: ['omg', 'wow']
       });
+
+    await request(app)
+      .post('/api/v1/comments')
+      .set('Authorization', res.body.token)
+      .send({
+        commentBy: res.body.user._id,
+        post: userPost.body._id,
+        comment: 'hi'
+      });
   });
   
   let testUser, testUserPosts, token;
@@ -55,18 +64,19 @@ describe('posts routes', () => {
     const id = userPost.body._id;
     const post = await request(app)
       .get(`/api/v1/posts/${id}`);
+    console.log(post.body);
     expect(post.body).toEqual({
       user: {
         _id: expect.any(String),
         profilePhotoUrl: expect.any(String),
-        username: 'intro_mode'
+        username: 'intro_mode',
       },
       photoUrl: 'cutephotohere',
       caption: 'cutecaptionhere',
       hashtags: ['omg', 'wow'],
       __v: 0,
       _id: expect.any(String),
-      //comments: expect.any(Array)
+      comments: expect.any(Array)
     });
   });
   it('updates a post', async() => {
