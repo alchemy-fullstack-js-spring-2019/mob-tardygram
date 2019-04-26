@@ -10,7 +10,7 @@ module.exports = ({
   const users = [...Array(userCount)]
     .map(() => ({
       username: chance.name(),
-      passwordHash: chance.hash(20),
+      password: chance.hash(20),
       profilePhotoUrl: chance.url(),
     }));
   return User.create(users);

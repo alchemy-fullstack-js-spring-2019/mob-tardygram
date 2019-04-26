@@ -2,8 +2,6 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const request = require('supertest');
 const app = require('../../lib/app');
-// const { getUser, getUsers } = require('../data/dataHelpers');
-// const Post = require('../../lib/models/Post');
 const connect = require('../../lib/utils/connect');
 
 describe('POST ROUTES', () => {
@@ -15,10 +13,7 @@ describe('POST ROUTES', () => {
   beforeEach(() => {
     return mongoose.connection.dropDatabase();
   });
-  
-  // beforeEach(() => {
-  //   return seedData();
-  // });
+
   
   afterAll(() => {
     return mongoose.connection.close();
@@ -38,6 +33,7 @@ describe('POST ROUTES', () => {
             user: user.body.user._id,
             photoUrl: 'photo'
           })
+          .set('Authorization', `Bearer ${user.body.token}`)
           .then(post => {
             expect(post.body).toEqual({
               __v: 0,
@@ -49,25 +45,6 @@ describe('POST ROUTES', () => {
           });
       
       });
-    // return getUser()
-    //   .then(user => {
-    //     console.log('**', user);
-    //     return request(app)
-    // .post('/instantgram/posts')
-    // .send({
-    //   user: user._id,
-    //   photoUrl: 'photo'
-    // })
-    //       .then(res => {
-    //         expect(res.body).toEqual({
-    //           _id: expect.any(String),
-    //           user: expect.any(String), // maybe?!
-    //           photoUrl: 'photo',
-    //           tags: [],
-    //           __v: 0
-    //         });
-    //       });
-    //   });
   });
 
   it('gets a list of posts', () => {
@@ -84,6 +61,7 @@ describe('POST ROUTES', () => {
             user: user.body.user._id,
             photoUrl: 'photo'
           })
+          .set('Authorization', `Bearer ${user.body.token}`)
           .then(() => {
             return request(app)
               .get('/instantgram/posts')
@@ -108,6 +86,7 @@ describe('POST ROUTES', () => {
             user: user.body.user._id,
             photoUrl: 'photo'
           })
+          .set('Authorization', `Bearer ${user.body.token}`)
           .then(post => {
             return request(app)
               .get(`/instantgram/posts/${post.body._id}`)
@@ -138,10 +117,12 @@ describe('POST ROUTES', () => {
             photoUrl: 'photo',
             caption: 'words'
           })
+          .set('Authorization', `Bearer ${user.body.token}`)
           .then(post => {
             return request(app)
               .patch(`/instantgram/posts/${post.body._id}`)
               .send({ caption: 'updated' })
+              .set('Authorization', `Bearer ${user.body.token}`)
               .then(res => {
                 expect(res.body).toEqual({
                   user: user.body.user._id,
@@ -168,9 +149,11 @@ describe('POST ROUTES', () => {
             user: user.body.user._id,
             photoUrl: 'photo'
           })
+          .set('Authorization', `Bearer ${user.body.token}`)
           .then(post => {
             return request(app)
               .delete(`/instantgram/posts/${post.body._id}`)
+              .set('Authorization', `Bearer ${user.body.token}`)
               .then(deletedPost => {
                 expect(deletedPost.body).toEqual(post.body);
               });
