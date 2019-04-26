@@ -28,3 +28,4 @@ Done
 
   To Do:
   - include comments in get post by id (and test)
+  - GET/posts/popular route

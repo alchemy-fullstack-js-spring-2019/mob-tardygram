@@ -79,7 +79,7 @@ describe('post routes', () => {
       });
   });
 
-  it.only('deletes a post by id', () => {
+  it('deletes a post by id', () => {
     return getUser({ username: 'person0' })
       .then(user => {
         return request(app)
@@ -107,6 +107,4 @@ describe('post routes', () => {
         });
       });
   });
-
 });
-
