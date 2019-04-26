@@ -4,6 +4,7 @@ const connect = require('../lib/utils/connect');
 const seedData = require('./seed-data');
 const User = require('../lib/models/User');
 const Post = require('../lib/models/Post');
+const Comment = require('../lib/models/Comment');
 
 
 beforeAll(() => {
@@ -37,5 +38,6 @@ function getToken(query) {
 module.exports = {
   ...createGetters(User),
   ...createGetters(Post),
+  ...createGetters(Comment),
   getToken
 };
