@@ -92,11 +92,14 @@ describe('POST ROUTES', () => {
               .get(`/instantgram/posts/${post.body._id}`)
               .then(res => {
                 expect(res.body).toEqual({
-                  __v: 0,
-                  _id: post.body._id,
-                  photoUrl: 'photo',
-                  tags: [],
-                  user: user.body.user._id
+                  comments: [],
+                  post: {
+                    __v: 0,
+                    _id: post.body._id,
+                    photoUrl: 'photo',
+                    tags: [],
+                    user: user.body.user._id
+                  }
                 });
               });
           });
@@ -160,4 +163,55 @@ describe('POST ROUTES', () => {
           });
       });
   });
+
+  it('post by id with comments', () => {
+    return request(app)
+      .post('/instantgram/auth/signup')
+      .send({
+        username: 'username',
+        password: 'password'
+      })
+      .then(user => {
+        return request(app)
+          .post('/instantgram/posts')
+          .send({
+            user: user.body.user._id,
+            photoUrl: 'photo'
+          })
+          .set('Authorization', `Bearer ${user.body.token}`)
+          .then(post => {
+            return request(app)
+              .post('/instantgram/comments')
+              .send({
+                comment: 'sassy',
+                post: post.body._id,
+                commentBy: post.body.user
+              })
+              .set('Authorization', `Bearer ${user.body.token}`)
+              .then(comment => {
+                return request(app)
+                  .get(`/instantgram/posts/${comment.body.post}`)
+                  .then(foundPost => {
+                    console.log('foundpost', foundPost.body);
+                    expect(foundPost.body).toEqual({
+                      comments: [{
+                        _id: expect.any(String),
+                        comment: 'sassy',
+                        // post: post.body._id,
+                        commentBy: post.body.user
+                      }],
+                      post: {
+                        __v: 0,
+                        _id: post.body._id,
+                        user: user.body.user._id,
+                        photoUrl: 'photo',
+                        tags: []
+                      }
+                    });
+                  });
+              });
+          });
+      });
+  });
+
 });
