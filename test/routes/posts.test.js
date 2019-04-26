@@ -50,6 +50,7 @@ describe('post routes', () => {
             username: expect.any(String),
             profilePhotoUrl: expect.any(String)
           },
+          comments: expect.any(Array),
           photoUrl: post.photoUrl,
           caption: post.caption,
         });
