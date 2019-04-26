@@ -2,4 +2,4 @@ language: node_js
 node_js:
   - "node"
 services: mongodb
-env: AUTH_SECRET=fake_token MONGODB_URI=mongodb://localhost:27000/instantgram
+env: AUTH_SECRET=fake_token MONGODB_URI=mongodb://localhost:27017/instantgram-clone
