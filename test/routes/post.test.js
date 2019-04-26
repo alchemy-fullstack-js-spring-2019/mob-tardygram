@@ -2,9 +2,7 @@ require('dotenv').config();
 const chance = require('chance').Chance();
 const request = require('supertest');
 const app = require('../../lib/app');
-const User = require('../../lib/models/User');
-const Post = require('../../lib/models/Post');
-const { getUser, getPosts, getPost, getToken } = require('../utils/data-helper');
+const { getUser, getPost, getToken } = require('../utils/data-helper');
 
 describe('post routes', () => {
 
@@ -60,7 +58,7 @@ describe('post routes', () => {
 
   it('updates post by id', () => {
     return getUser({ username: 'person0' })
-      .then(user => {
+      .then(() => {
         return getPost()
           .then(post => {
             return request(app)
@@ -81,10 +79,34 @@ describe('post routes', () => {
       });
   });
 
-  // it('deletes a post by id', () => {
-  //   return getPost()
-  //     .then();
-  // });
+  it.only('deletes a post by id', () => {
+    return getUser({ username: 'person0' })
+      .then(user => {
+        return request(app)
+          .post('/api/v1/posts')
+          .set('Authorization', `Bearer ${getToken()}`)
+          .send({ 
+            user: user._id,
+            photoUrl: chance.url(),
+            caption: chance.string(),
+            tags: [chance.string()]
+          });
+      })
+      .then(post => {
+        return request(app)
+          .delete(`/api/v1/posts/${post.body._id}`)
+          .set('Authorization', `Bearer ${getToken()}`);
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          user: expect.any(String),
+          photoUrl: expect.any(String),
+          caption: expect.any(String),
+          tags: expect.any(Array),
+          _id: expect.any(String)
+        });
+      });
+  });
 
 });
 
