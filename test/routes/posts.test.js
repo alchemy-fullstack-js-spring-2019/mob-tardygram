@@ -123,4 +123,15 @@ describe('post routes', () => {
       _id: post._id
     });
   });
+
+  it('gets a list of the ten posts with the most comments', () => {
+    return request(app)
+      .get('/api/v1/posts/popular')
+      .then(res => {
+        expect(res.body).toHaveLength(10);
+        for(let i = 0; i < 9; i++) {
+          expect(res.body[i].commentCount).toBeGreaterThanOrEqual(res.body[i + 1].commentCount);
+        }
+      });
+  });
 });
