@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const request = require('supertest');
 const app = require('../../lib/app');
 const connect = require('../../lib/utils/connect');
-// const Comment = require('../../lib/models/User');
 
 describe('routes work for comments', () => {
   beforeAll(() => {
@@ -32,6 +31,7 @@ describe('routes work for comments', () => {
             user: user.body.user._id,
             photoUrl: 'photo'
           })
+          .set('Authorization', `Bearer ${user.body.token}`)
           .then(post => {
             return request(app)
               .post('/instantgram/comments')
@@ -40,6 +40,7 @@ describe('routes work for comments', () => {
                 post: post.body._id,
                 comment: 'fun little comment'
               })
+              .set('Authorization', `Bearer ${user.body.token}`)
               .then(comment => {
                 expect(comment.body).toEqual({
                   commentBy: post.body.user,
@@ -66,6 +67,7 @@ describe('routes work for comments', () => {
             user: user.body.user._id,
             photoUrl: 'photo'
           })
+          .set('Authorization', `Bearer ${user.body.token}`)
           .then(post => {
             return request(app)
               .post('/instantgram/comments')
@@ -74,9 +76,11 @@ describe('routes work for comments', () => {
                 post: post.body._id,
                 comment: 'fun little comment'
               })
+              .set('Authorization', `Bearer ${user.body.token}`)
               .then(comment => {
                 return request(app)
                   .delete(`/instantgram/comments/${comment.body._id}`)
+                  .set('Authorization', `Bearer ${user.body.token}`)
                   .then(deletedRes => {
                     expect(deletedRes.body).toEqual(comment.body);
                   });
