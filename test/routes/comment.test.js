@@ -24,8 +24,8 @@ describe('comment routes', () => {
           .post('/api/v1/comments')
           .set('Authorization', `Bearer ${getToken()}`)
           .send({
-            commentBy: post.user,
-            post: post._id,
+            commentBy: post.body.user,
+            post: post.body._id,
             comment: 'this is my cool comment'
           });
       })
@@ -33,7 +33,9 @@ describe('comment routes', () => {
         expect(res.body).toEqual({
           commentBy: expect.any(String),
           post: expect.any(String),
-          comment: 'this is my cool comment'
+          comment: 'this is my cool comment',
+          _id: expect.any(String),
+          __v: 0
         });
       });
   });
