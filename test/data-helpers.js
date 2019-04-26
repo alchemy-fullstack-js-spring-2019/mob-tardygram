@@ -5,6 +5,8 @@ const seedData = require('./seed-data');
 const User = require('../lib/models/User');
 const Thread = require('../lib/models/Thread');
 const Comment = require('../lib/models/Comment');
+const request = require('supertest');
+const app = require('../lib/app');
 
 beforeAll(() => {
   return connect();
@@ -16,6 +18,22 @@ beforeEach(() => {
 
 beforeEach(() => {
   return seedData();
+});
+
+let token = null;
+beforeEach(() => {
+  return User.findOne()
+    .then(user => {
+      return request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          username: user.username,
+          password: 'password'
+        });
+    })
+    .then(res => {
+      token = res.body.token;
+    });
 });
 
 afterAll(() => {
@@ -34,5 +52,6 @@ const createGetters = Model => {
 module.exports = {
   ...createGetters(User),
   ...createGetters(Thread),
-  ...createGetters(Comment)
+  ...createGetters(Comment),
+  getToken: () => token
 };
