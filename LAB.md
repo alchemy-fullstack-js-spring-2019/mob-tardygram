@@ -4,7 +4,7 @@ Let's create an Instagram clone.
 
 ## Models
 
-### User
+### COMPLETE User
 
 Users can post new posts and leave comments. They have:
 
@@ -12,14 +12,14 @@ Users can post new posts and leave comments. They have:
 * A String `passwordHash`
 * A String `profilePhotoUrl`
 
-### Post
+### Thread
 
-Posts are photos with some text caption. They should have:
+threads are photos with some text caption. They should have:
 
-* A reference to user `user`
-* A String `photoUrl`
-* A String `caption`
-* An array of String `tags`
+* A reference to user `user` req
+* A String `photoUrl` req unique
+* A String `caption` option
+* An array of String `hashtags` option
 
 ### Comment
 
