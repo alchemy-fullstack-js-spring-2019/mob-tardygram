@@ -46,4 +46,49 @@ describe('COMMENTS', () => {
         });
       });
   });
+  it('can DELETE a comment - auth required', () => {
+    return getUser()
+      .then(user => {
+        return request(app)
+          .post('/api/v1/auth/signin')
+          .send({ username: user.username, password: 'password' });
+      })
+      .then(user => {
+        return Promise.all([
+          Promise.resolve(user),
+          request(app)
+            .post('/api/v1/threads')
+            .set('authorization', `Bearer ${user.body.token}`)
+            .send({
+              username: user.body.user._id,
+              photoUrl: 'blah.jpg',
+              caption : 'Me and Shippy, so happy!',
+              hashtags: ['#lovethatshippy', '#truelove', '#trustno1']
+            })
+        ]);
+      })
+      .then(([user, thread]) => {
+        return Promise.all([
+          Promise.resolve(user),
+          request(app)
+            .post('/api/v1/comments')
+            .set('authorization', `Bearer ${user.body.token}`)
+            .send({
+              username: user.body.user._id,
+              thread: thread.body._id,
+              body: 'Seeing you and Shippy together makes me so happy'
+            })
+        ]); 
+      })
+      .then(([user, comment]) => {
+        return request(app)
+          .delete(`/api/v1/comments/${comment.body._id}`)
+          .set('authorization', `Bearer ${user.body.token}`);
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String)
+        });
+      });
+  });
 });
