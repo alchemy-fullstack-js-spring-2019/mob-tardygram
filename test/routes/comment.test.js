@@ -66,13 +66,13 @@ describe('comment routes', () => {
       })
       .then(comment => {
         return request(app)
-          .delete(`/api/v1/comments/${comment.body._id}`);
+          .delete(`/api/v1/comments/${comment.body._id}`)
+          .set('Authorization', `Bearer ${getToken()}`);
       })
       .then(res => {
-        console.log(res.body);
         expect(res.body).toEqual({
-          commentBy: res.body.commentBy,
-          post: res.body.post,
+          commentBy: expect.any(String),
+          post: expect.any(String),
           comment: 'this is my cool comment',
           _id: expect.any(String)
         });
