@@ -49,19 +49,24 @@ describe('posts routes', () => {
     const posts = await request(app)
       .get('/api/v1/posts');
 
-    expect(posts.body).toHaveLength(201);
+    expect(posts.body).toHaveLength(51);
   });
-  it('gets a post by id', async() => {
+  it.only('gets a post by id', async() => {
     const id = userPost.body._id;
     const post = await request(app)
       .get(`/api/v1/posts/${id}`);
     expect(post.body).toEqual({
-      user: res.body.user._id,
+      user: {
+        _id: expect.any(String),
+        profilePhotoUrl: expect.any(String),
+        username: 'intro_mode'
+      },
       photoUrl: 'cutephotohere',
       caption: 'cutecaptionhere',
       hashtags: ['omg', 'wow'],
       __v: 0,
-      _id: expect.any(String)
+      _id: expect.any(String),
+      //comments: expect.any(Array)
     });
   });
   it('updates a post', async() => {
