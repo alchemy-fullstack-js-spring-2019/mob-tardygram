@@ -3,7 +3,7 @@ const User = require('../../lib/models/User');
 const Post = require('../../lib/models/Post');
 const Comment = require('../../lib/models/Comment');
 
-module.exports = ({ 
+module.exports = ({
   userCount = 10,
   postCount = 100,
   commentCount = 200
@@ -14,7 +14,7 @@ module.exports = ({
     profilePhotoUrl: 'image.jpg'
   }));
 
-  
+
   return User
     .create(users)
     .then(createdUsers => {
